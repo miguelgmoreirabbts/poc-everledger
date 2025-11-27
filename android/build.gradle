@@ -17,5 +17,48 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:7.3.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
+        implementation 'br.com.bb.android:dls-react-native:1.0.0@aar'
+        implementation 'br.com.bb.android:react-native-safe-area-context:4.7.2@aar'
+        implementation 'br.com.bb.android:react-native-community_async-storage:1.18.1@aar'
+        implementation 'com.airbnb.android:lottie:2.3.1@aar'
+        implementation 'com.airbnb.android:lottie-react-native:2.3.2@aar'
+        implementation project(path: ':react-native-pager-view')
+        implementation project(path: ':rn-fetch-blob')
+        implementation project(path: ':react-native-a11y')
     }
+}
+
+def libsFolder = "${rootDir}/libs"
+
+def canDownloadLibs() {
+    def libsFolder = "${rootDir}/libs"
+    def libsPaths = [
+        "${libsFolder}/react-native",
+        "${libsFolder}/react-native-pager-view/package.json",
+        "${libsFolder}/rn-fetch-blob/package.json",
+    ]
+    def allFoldersExist = libsPaths.every {folderPath ->
+        file(folderPath).exists()
+    }
+
+    return !allFoldersExist
+}
+
+task downloadLibsRN(type: Sync) {
+  println("Verificando se todas as libs ja existem...")
+  if (canDownloadLibs()) {
+    println('Iniciando o download do react-native...')
+    download.run {
+      src ([
+        'https://binarios.intranet.bb.com.br:443/artifactory/gradle-android-bb-local/br/com/bb/android/react-native/0.71.12/react-native-0.71.12.zip',
+        'https://binarios.intranet.bb.com.br:443/artifactory/gradle-android-bb-local/br/com/bb/android/react-native-pager-view/6.2.0/react-native-pager-view-6.2.0.zip',
+        'https://binarios.intranet.bb.com.br:443/artifactory/gradle-android-bb-local/br/com/bb/android/rn-fetch-blob/0.12.0/rn-fetch-blob-0.12.0.zip'
+      ])
+      dest libsFolder
+      overwrite true
+    }
+    println('Download concluído')
+  } else {
+    println("Todas as libs ja existem. Nao serao baixadas novamente.")
+  }
 }
