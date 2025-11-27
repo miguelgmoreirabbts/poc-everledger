@@ -59,19 +59,4 @@ public class MainApplication extends Application implements ReactApplication {
     }
     ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
-
-  public static void clearExternalPackages() {
-        reactPackages.clear();
-        reactPackages.add(new DlsReactNativePackage());
-        reactPackages.add(new LottiePackage());
-        reactPackages.add(new RNFetchBlobPackage());
-        reactPackages.add(new SafeAreaContextPackage());
-        reactPackages.add(new PagerViewPackage());
-        reactPackages.add(new AsyncStoragePackage());,
-        reactPackages.add(new A11yPackage());
-    }
-
-    public static void addReactPackage(ReactPackage reactPackage) {
-        reactPackages.add(reactPackage);
-    }
 }
